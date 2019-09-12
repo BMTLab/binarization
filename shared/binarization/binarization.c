@@ -13,7 +13,7 @@ void threshold(
 	const uint_fast8_t  log_w_ext = 1;
 	const uint_fast8_t  std_dev_max = 0xF0;
 	#endif
-	const uint_fast16_t width_w = width >> 3;
+	const uint_fast16_t width_w = width >> 4;
 	const uint_fast16_t width_w_half = width_w >> 1;
 	float k = 0;
 
@@ -22,7 +22,7 @@ void threshold(
 	uint_fast8_t  min_image = 0;
 	uint_fast16_t index = 0;
 	uint_fast16_t count_w = 0;
-	uint_fast16_t count_black = 0;
+	uint_fast16_t count_white = 0;
 	#if USE_STD_DEV
 	uint_fast16_t count_w_ext = 0;
 	#endif
@@ -55,7 +55,7 @@ void threshold(
 		goto out;
 
 	/* The calculation of the integral sum and min of the image */
-	count_black = 0;
+	count_white = 0;
 	min_image = src[0];
 
 	for (i = 0; i < width; i++)
@@ -73,12 +73,12 @@ void threshold(
 			if (index != 0 && src[index] < min_image)
 				min_image = src[index];
 
-			if (src[index] <= (unsigned char)BLACK_BRIGHT)
-				count_black++;
+			if (src[index] <= (unsigned char) BLACK_BRIGHT)
+				count_white++;
 		}
 	}
 
-	k = (float) 100 * count_black / (width * height);
+	k = (float) 100 * count_white / (width * height);
 
 	/* Loop for each pixel */
 	for (i = 0; i < width; i++)

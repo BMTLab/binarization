@@ -18,7 +18,12 @@
 	printf(x);       \
 	printf("\r\n")
 
-int write_data(const char *file_path, uint_fast16_t width, uint_fast16_t height, unsigned char *image, const char *title)
+int write_data(
+	const char *file_path, 
+	const uint_fast16_t width, 
+	const uint_fast16_t height, 
+	unsigned char *image, 
+	const char *title)
 {
 	int_fast8_t err_code = 0;
 	FILE *file = NULL;
@@ -73,7 +78,7 @@ int write_data(const char *file_path, uint_fast16_t width, uint_fast16_t height,
 
 	png_write_info(png_ptr, info_ptr);
 
-	row = (png_bytep)malloc(width * sizeof(png_byte));
+	row = (png_bytep) calloc(width, sizeof(png_byte));
 
 	register uint_fast16_t x, y;
 	for (y = 0; y < height; y++)
@@ -94,7 +99,7 @@ out:
 	if (info_ptr != NULL)
 		png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
 	if (png_ptr != NULL)
-		png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+		png_destroy_write_struct(&png_ptr, (png_infopp) NULL);
 	if (row != NULL)
 		free(row);
 
@@ -165,8 +170,8 @@ int get_data(const char *name, uint_fast16_t *width, uint_fast16_t *height, unsi
 	png_read_update_info(png, info);
 
 	/* Allocate image */
-	*width = (uint_fast16_t)png_get_image_width(png, info);
-	*height = (uint_fast16_t)png_get_image_height(png, info);
+	*width = (uint_fast16_t) png_get_image_width(png, info);
+	*height = (uint_fast16_t) png_get_image_height(png, info);
 
 	*raw = calloc(*width * *height, sizeof(png_uint_16));
 
@@ -178,7 +183,7 @@ int get_data(const char *name, uint_fast16_t *width, uint_fast16_t *height, unsi
 
 	for (uint_fast8_t pass = 0; pass < number_passes; pass++)
 	{
-		for (uint_fast16_t y = 0; y < *height; y++)
+		for (register uint_fast16_t y = 0; y < *height; y++)
 		{
 			row_pointer = *raw + y * *width;
 			png_read_rows(png, &row_pointer, NULL, 1);
@@ -194,9 +199,9 @@ out:
 		png_read_end(png, NULL);
 
 		if (info)
-			png_destroy_read_struct((png_structpp)&png, &info, (png_infopp)NULL);
+			png_destroy_read_struct((png_structpp) &png, &info, (png_infopp) NULL);
 		else
-			png_destroy_read_struct((png_structpp)&png, (png_infopp)NULL, (png_infopp)NULL);
+			png_destroy_read_struct((png_structpp) &png, (png_infopp) NULL, (png_infopp) NULL);
 	}
 	
 	if (file)
@@ -224,7 +229,7 @@ int check_if_png(const char *file_path)
 		goto out;
 	}
 
-	if (!png_sig_cmp(buf, (png_size_t)0, PNG_BYTES_TO_CHECK))
+	if (!png_sig_cmp(buf, (png_size_t) 0, PNG_BYTES_TO_CHECK))
 		err_code = 1;
 
 out:
@@ -238,7 +243,7 @@ out:
 const char *open_and_choose_file(const char *dir_path, char *filename)
 {
 	println("Choose one of of exiting file in directory:");
-	scan_dir((char *)dir_path);
+	scan_dir((char *) dir_path);
 
 	printf("\r\n Select a file: ");
 
@@ -264,7 +269,7 @@ int main(void)
 	unsigned char *raw = NULL;
 	unsigned char *out = NULL;
 
-	char *filename = (char *)malloc(0x10);
+	char *filename = calloc(MAX_NAME_LENGTH, sizeof(char));
 	const char *file_source = open_and_choose_file(SOURCE_IMAGES_PATH, filename);
 	const char *file_path_dst = concat(OUTPUT_IMAGES_PATH, filename);
 
@@ -286,7 +291,7 @@ int main(void)
 		goto out;
 	}
 
-	out = (unsigned char *)calloc(width * height, sizeof(unsigned char *));
+	out = calloc(width * height, sizeof(unsigned char *));
 
 	threshold(raw, out, width, height);
 
