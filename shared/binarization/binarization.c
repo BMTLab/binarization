@@ -13,7 +13,7 @@ void threshold(
 	const uint_fast8_t  log_w_ext = 1;
 	const uint_fast8_t  std_dev_max = 0xF0;
 	#endif
-	const uint_fast16_t width_w = width >> 4;
+	const uint_fast16_t width_w = width >> 2;
 	const uint_fast16_t width_w_half = width_w >> 1;
 	float k = 0;
 
@@ -73,12 +73,14 @@ void threshold(
 			if (index != 0 && src[index] < min_image)
 				min_image = src[index];
 
+			/*
 			if (src[index] <= (unsigned char) BLACK_BRIGHT)
 				count_white++;
+			*/
 		}
 	}
 
-	k = (float) 100 * count_white / (width * height);
+	k = 0.3; //(float) 100 * (count_white) / (width * height);
 
 	/* Loop for each pixel */
 	for (i = 0; i < width; i++)

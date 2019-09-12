@@ -6,7 +6,7 @@
 #include <math.h>
 
 #define USE_STD_DEV 0
-#define BLACK_BRIGHT 0x03
+// #define BLACK_BRIGHT 0x50
 
 #ifdef __cplusplus
 extern "C" {
