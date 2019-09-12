@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/binarization_demo/binarization_release/binariza.28650BBF.tlog
