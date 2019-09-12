@@ -18,14 +18,18 @@
 	printf(x);       \
 	printf("\r\n")
 
-int write_data(
+typedef int bool;
+#define TRUE 1
+#define FALSE 0
+
+bool write_data(
 	const char *file_path, 
 	const uint_fast16_t width, 
 	const uint_fast16_t height, 
 	unsigned char *image, 
 	const char *title)
 {
-	int_fast8_t err_code = 0;
+	bool result = FALSE;
 	FILE *file = NULL;
 	png_structp png_ptr = NULL;
 	png_infop info_ptr = NULL;
@@ -91,7 +95,7 @@ int write_data(
 	}
 
 	png_write_end(png_ptr, NULL);
-	err_code = 1;
+	result = TRUE;
 
 out:
 	if (file != NULL)
@@ -103,16 +107,16 @@ out:
 	if (row != NULL)
 		free(row);
 
-	return err_code;
+	return result;
 }
 
-int get_data(
+bool get_data(
 	const char *name, 
 	uint_fast16_t *width, 
 	uint_fast16_t *height, 
 	unsigned char **raw)
 {
-	int err_code = 0;
+	bool result = FALSE;
 	png_structp png = NULL;
 	png_bytep row_pointer = NULL;
 	png_infop info = NULL;	
@@ -194,7 +198,7 @@ int get_data(
 		}
 	}
 
-	err_code = 1;
+	result = TRUE;
 
 out:
 	/* Clean-up */
@@ -211,13 +215,13 @@ out:
 	if (file)
 		fclose(file);
 
-	return err_code;
+	return result;
 }
 
-int check_if_png(const char *file_path)
+bool check_if_png(const char *file_path)
 {
 	FILE *file;
-	int err_code = 0;
+	bool result = FALSE;
 
 	unsigned char buf[PNG_BYTES_TO_CHECK];
 
@@ -234,14 +238,14 @@ int check_if_png(const char *file_path)
 	}
 
 	if (!png_sig_cmp(buf, (png_size_t) 0, PNG_BYTES_TO_CHECK))
-		err_code = 1;
+		result = TRUE;
 
 out:
 	/* Clean-up */
 	if (file)
 		fclose(file);
 
-	return err_code;
+	return result;
 }
 
 const char *open_and_choose_file(const char *dir_path, char *filename)
