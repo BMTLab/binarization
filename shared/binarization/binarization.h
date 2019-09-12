@@ -12,7 +12,11 @@
 extern "C" {
 #endif
 
-extern void threshold(unsigned char* src, unsigned char* out, uint_fast16_t width, uint_fast16_t height);
+extern void threshold(
+	unsigned char* src, 
+	unsigned char* out, 
+	const uint_fast16_t width, 
+	const uint_fast16_t height);
 
 static inline double __cdecl sqr(double _x)
 {
