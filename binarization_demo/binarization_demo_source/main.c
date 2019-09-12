@@ -106,7 +106,11 @@ out:
 	return err_code;
 }
 
-int get_data(const char *name, uint_fast16_t *width, uint_fast16_t *height, unsigned char **raw)
+int get_data(
+	const char *name, 
+	uint_fast16_t *width, 
+	uint_fast16_t *height, 
+	unsigned char **raw)
 {
 	int err_code = 0;
 	png_structp png = NULL;
